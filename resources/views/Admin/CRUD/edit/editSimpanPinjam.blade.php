@@ -99,7 +99,7 @@
                                         </div>
                                         <div class="form-group">
                                             <label>Status</label>
-                                            <input type="text" value="{{ $data->status }}" class="form-control" name="status" id="status" readonly>
+                                            <input type="text" class="form-control" name="status" id="status" value="{{ $data->status }}" readonly>
                                         </div>
                                     </div>
                                     <div class="card-footer">
@@ -119,43 +119,7 @@
     @include('Layout/script')
     <script>
         $(function() {
-            function hitungStatus() {
-                const sisa = parseInt(document.getElementById('sisa').value || 0);
-                const tenggat = new Date(document.getElementById('Inputtenggat').value);
-                const today = new Date();
-                const statusInput = document.getElementById('status');
-
-                let status = '';
-
-                if (sisa === 0) {
-                    status = (tenggat < today) ? 'Lunas + Telat Bayar' : 'Lunas';
-                } else {
-                    status = (tenggat < today) ? 'Belum Lunas + Telat Bayar' : 'Belum Lunas';
-                }
-
-                statusInput.value = status;
-            }
-
-            // Update sisa otomatis dan panggil hitungStatus
-            document.getElementById('pinjam').addEventListener('input', function () {
-                const pinjam = parseInt(this.value || 0);
-                const dibayar = parseInt(document.getElementById('dibayar').value || 0);
-                const sisa = pinjam - dibayar;
-                document.getElementById('sisa').value = sisa >= 0 ? sisa : 0;
-                hitungStatus();
-            });
-
-            document.getElementById('dibayar').addEventListener('input', function () {
-                const pinjam = parseInt(document.getElementById('pinjam').value || 0);
-                const dibayar = parseInt(this.value || 0);
-                const sisa = pinjam - dibayar;
-                document.getElementById('sisa').value = sisa >= 0 ? sisa : 0;
-                hitungStatus();
-            });
-
-            document.getElementById('Inputtenggat').addEventListener('change', function () {
-                hitungStatus();
-            });
+            
             $('#formInputDataProduktif').validate({
                 rules: {
                     nama_peminjam: {
@@ -201,57 +165,94 @@
                     $(element).removeClass('is-invalid');
                 }
             });
-            function formatRibuan(number) {
-                return new Intl.NumberFormat('id-ID').format(number);
-            }
-
-            function unformatRibuan(value) {
-                return parseInt(value.replace(/\./g, '')) || 0;
-            }
-
-            function updateSisa() {
-                const pinjam = unformatRibuan(document.getElementById('pinjam_display').value);
-                const dibayar = unformatRibuan(document.getElementById('dibayar_display').value);
-                const sisa = Math.max(pinjam - dibayar, 0);
-
-                document.getElementById('sisa_display').value = formatRibuan(sisa);
-                document.getElementById('sisa').value = sisa;
-                document.getElementById('dibayar').value = dibayar;
-
-                // Validasi batas maksimum
-                const errorEl = document.getElementById('dibayar_error');
-                if (dibayar > 4000000) {
-                    errorEl.classList.remove('d-none');
-                } else {
-                    errorEl.classList.add('d-none');
-                }
-
-                // Tambahan: update status setelah sisa dihitung
-                hitungStatus();
-            }
-
-
-            document.getElementById('dibayar_display').addEventListener('input', function () {
-                const angka = unformatRibuan(this.value);
-                this.value = formatRibuan(angka);
-                updateSisa();
-            });
-
-            // Optional: Cegah submit jika melebihi batas
-            document.querySelector('form').addEventListener('submit', function (e) {
-                const dibayar = unformatRibuan(document.getElementById('dibayar_display').value);
-                if (dibayar > 4000000) {
-                    e.preventDefault();
-                    alert('Jumlah dibayar tidak boleh melebihi Rp. 4.000.000');
-                }
-            });
+            
         });
         
     </script>
 
     <script>
+        $(function () {
+            function formatRibuan(number) {
+                return new Intl.NumberFormat('id-ID').format(number);
+            }
         
+            function unformatRibuan(value) {
+                return parseInt(value.replace(/\./g, '')) || 0;
+            }
+        
+            function hitungStatus(pinjam, dibayar, tenggatStr) {
+                const sisa = Math.max(pinjam - dibayar, 0);
+                const statusInput = document.getElementById('status');
+        
+                const tenggat = new Date(tenggatStr);
+                const today = new Date();
+        
+                // Hilangkan jam dari tanggal agar hanya membandingkan tahun-bulan-tanggal
+                tenggat.setHours(0, 0, 0, 0);
+                today.setHours(0, 0, 0, 0);
+        
+                let status = '';
+        
+                if (sisa === 0) {
+                    status = (today <= tenggat) ? 'Lunas' : 'Lunas + Telat Bayar';
+                } else {
+                    status = (today <= tenggat) ? 'Belum Lunas' : 'Belum Lunas + Telat Bayar';
+                }
+        
+                statusInput.value = status;
+            }
+        
+            function updateSemua() {
+                const pinjam = unformatRibuan(document.getElementById('pinjam_display').value);
+                const dibayar = unformatRibuan(document.getElementById('dibayar_display').value);
+                const tenggat = document.getElementById('Inputtenggat').value;
+        
+                const sisa = Math.max(pinjam - dibayar, 0);
+        
+                document.getElementById('sisa_display').value = formatRibuan(sisa);
+                document.getElementById('sisa').value = sisa;
+                document.getElementById('pinjam').value = pinjam;
+                document.getElementById('dibayar').value = dibayar;
+        
+                // Validasi batas maksimal
+                const dibayarError = document.getElementById('dibayar_error');
+                if (dibayar > 4000000 || pinjam > 4000000) {
+                    dibayarError?.classList.remove('d-none');
+                } else {
+                    dibayarError?.classList.add('d-none');
+                }
+        
+                hitungStatus(pinjam, dibayar, tenggat);
+            }
+        
+            ['pinjam_display', 'dibayar_display'].forEach(id => {
+                const input = document.getElementById(id);
+                if (input) {
+                    input.addEventListener('input', function () {
+                        let angka = unformatRibuan(this.value);
+                        if (angka > 4000000) angka = 4000000;
+                        this.value = formatRibuan(angka);
+                        updateSemua();
+                    });
+                }
+            });
+        
+            document.getElementById('Inputtenggat')?.addEventListener('change', updateSemua);
+        
+            document.querySelector('form')?.addEventListener('submit', function (e) {
+                const pinjam = unformatRibuan(document.getElementById('pinjam_display').value);
+                const dibayar = unformatRibuan(document.getElementById('dibayar_display').value);
+                if (pinjam > 4000000 || dibayar > 4000000) {
+                    e.preventDefault();
+                    alert('Nilai pinjaman atau dibayar tidak boleh lebih dari Rp. 4.000.000');
+                }
+            });
+        
+            updateSemua();
+        });
     </script>
+    
+    
 </body>
 
 </html>

@@ -130,43 +130,6 @@
     @include('Layout/script')
     <script>
         $(function() {
-            function hitungStatus() {
-                const sisa = parseInt(document.getElementById('sisa').value || 0);
-                const tenggat = new Date(document.getElementById('Inputtenggat').value);
-                const today = new Date();
-                const statusInput = document.getElementById('status');
-
-                let status = '';
-
-                if (sisa === 0) {
-                    status = (tenggat < today) ? 'Lunas + Telat Bayar' : 'Lunas';
-                } else {
-                    status = (tenggat < today) ? 'Belum Lunas + Telat Bayar' : 'Belum Lunas';
-                }
-
-                statusInput.value = status;
-            }
-
-            // Update sisa otomatis dan panggil hitungStatus
-            document.getElementById('pinjam').addEventListener('input', function () {
-                const pinjam = parseInt(this.value || 0);
-                const dibayar = parseInt(document.getElementById('dibayar').value || 0);
-                const sisa = pinjam - dibayar;
-                document.getElementById('sisa').value = sisa >= 0 ? sisa : 0;
-                hitungStatus();
-            });
-
-            document.getElementById('dibayar').addEventListener('input', function () {
-                const pinjam = parseInt(document.getElementById('pinjam').value || 0);
-                const dibayar = parseInt(this.value || 0);
-                const sisa = pinjam - dibayar;
-                document.getElementById('sisa').value = sisa >= 0 ? sisa : 0;
-                hitungStatus();
-            });
-
-            document.getElementById('Inputtenggat').addEventListener('change', function () {
-                hitungStatus();
-            });
             $('#formInputDataProduktif').validate({
                 rules: {
                     nama_peminjam: {
@@ -216,56 +179,100 @@
     </script>
 
     <script>
-        function formatRibuan(number) {
-            return new Intl.NumberFormat('id-ID').format(number);
-        }
+        $(function() {
+            function hitungStatus() {
+                const sisa = parseInt(document.getElementById('sisa').value || 0);
+                const tenggat = new Date(document.getElementById('Inputtenggat').value);
+                const today = new Date();
+                const statusInput = document.getElementById('status');
 
-        function unformatRibuan(value) {
-            return parseInt(value.replace(/\./g, '')) || 0;
-        }
+                // Hilangkan jam agar hanya tanggal yang dibandingkan
+                tenggat.setHours(0, 0, 0, 0);
+                today.setHours(0, 0, 0, 0);
 
-        function updateSisaDanStatus() {
-            const pinjam = unformatRibuan(document.getElementById('pinjam_display').value);
-            const dibayar = unformatRibuan(document.getElementById('dibayar_display').value);
-            const sisa = Math.max(pinjam - dibayar, 0);
+                let status = '';
 
-            document.getElementById('sisa_display').value = formatRibuan(sisa);
-            document.getElementById('sisa').value = sisa;
+                if (sisa === 0) {
+                    status = (today <= tenggat) ? 'Lunas' : 'Lunas + Telat Bayar';
+                } else {
+                    status = (today <= tenggat) ? 'Belum Lunas' : 'Belum Lunas + Telat Bayar';
+                }
 
-            document.getElementById('pinjam').value = pinjam;
-            document.getElementById('dibayar').value = dibayar;
-
-            // Validasi batas maksimal
-            const dibayarError = document.getElementById('dibayar_error');
-            if (dibayar > 4000000 || pinjam > 4000000) {
-                dibayarError.classList.remove('d-none');
-            } else {
-                dibayarError.classList.add('d-none');
+                statusInput.value = status;
             }
 
-            // Panggil fungsi status jika ada
-            if (typeof hitungStatus === 'function') {
+
+            // Update sisa otomatis dan panggil hitungStatus
+            document.getElementById('pinjam').addEventListener('input', function () {
+                const pinjam = parseInt(this.value || 0);
+                const dibayar = parseInt(document.getElementById('dibayar').value || 0);
+                const sisa = pinjam - dibayar;
+                document.getElementById('sisa').value = sisa >= 0 ? sisa : 0;
                 hitungStatus();
-            }
-        }
-
-        ['pinjam_display', 'dibayar_display'].forEach(id => {
-            document.getElementById(id).addEventListener('input', function () {
-                let angka = unformatRibuan(this.value);
-                if (angka > 4000000) angka = 4000000;
-                this.value = formatRibuan(angka);
-                updateSisaDanStatus();
             });
-        });
 
-        // Validasi submit
-        document.querySelector('form').addEventListener('submit', function (e) {
-            const pinjam = unformatRibuan(document.getElementById('pinjam_display').value);
-            const dibayar = unformatRibuan(document.getElementById('dibayar_display').value);
-            if (pinjam > 4000000 || dibayar > 4000000) {
-                e.preventDefault();
-                alert('Nilai pinjaman atau dibayar tidak boleh lebih dari Rp. 4.000.000');
+            document.getElementById('dibayar').addEventListener('input', function () {
+                const pinjam = parseInt(document.getElementById('pinjam').value || 0);
+                const dibayar = parseInt(this.value || 0);
+                const sisa = pinjam - dibayar;
+                document.getElementById('sisa').value = sisa >= 0 ? sisa : 0;
+                hitungStatus();
+            });
+
+            document.getElementById('Inputtenggat').addEventListener('change', function () {
+                hitungStatus();
+            });
+            function formatRibuan(number) {
+                return new Intl.NumberFormat('id-ID').format(number);
             }
+
+            function unformatRibuan(value) {
+                return parseInt(value.replace(/\./g, '')) || 0;
+            }
+
+            function updateSisaDanStatus() {
+                const pinjam = unformatRibuan(document.getElementById('pinjam_display').value);
+                const dibayar = unformatRibuan(document.getElementById('dibayar_display').value);
+                const sisa = Math.max(pinjam - dibayar, 0);
+
+                document.getElementById('sisa_display').value = formatRibuan(sisa);
+                document.getElementById('sisa').value = sisa;
+
+                document.getElementById('pinjam').value = pinjam;
+                document.getElementById('dibayar').value = dibayar;
+
+                // Validasi batas maksimal
+                const dibayarError = document.getElementById('dibayar_error');
+                if (dibayar > 4000000 || pinjam > 4000000) {
+                    dibayarError.classList.remove('d-none');
+                } else {
+                    dibayarError.classList.add('d-none');
+                }
+
+                // Panggil fungsi status jika ada
+                if (typeof hitungStatus === 'function') {
+                    hitungStatus();
+                }
+            }
+
+            ['pinjam_display', 'dibayar_display'].forEach(id => {
+                document.getElementById(id).addEventListener('input', function () {
+                    let angka = unformatRibuan(this.value);
+                    if (angka > 4000000) angka = 4000000;
+                    this.value = formatRibuan(angka);
+                    updateSisaDanStatus();
+                });
+            });
+
+            // Validasi submit
+            document.querySelector('form').addEventListener('submit', function (e) {
+                const pinjam = unformatRibuan(document.getElementById('pinjam_display').value);
+                const dibayar = unformatRibuan(document.getElementById('dibayar_display').value);
+                if (pinjam > 4000000 || dibayar > 4000000) {
+                    e.preventDefault();
+                    alert('Nilai pinjaman atau dibayar tidak boleh lebih dari Rp. 4.000.000');
+                }
+            });
         });
     </script>
 </body>

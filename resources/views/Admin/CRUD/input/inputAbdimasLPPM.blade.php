@@ -94,9 +94,9 @@
                                             <label>Status</label>
                                             <select class="form-control" name="status" id="status">
                                                 <option selected disabled>-- Pilih Status --</option>
-                                                <option>Sudah Dilakukan</option>
+                                                <option>Selesai</option>
                                                 <option>Direncanakan</option>
-                                                <option>Belum Dilakukan</option>
+                                                <option>Dibatalkan</option>
                                             </select>
                                         </div>
                                     </div>

@@ -81,6 +81,12 @@
                                                 placeholder="Masukkan detail penjelasan keterangan aspirasi...."></textarea>
                                         </div>
                                         <div class="form-group">
+                                            <label for="tanggal_dilakukan">Tanggal Aspirasi Dibuat</label>
+                                            <input type="date" name="tanggal_dilakukan" class="form-control"
+                                                id="tanggal_dilakukan" value="{{ $data->tanggal_dilakukan }}"
+                                                placeholder="dd/mm/yyyy">
+                                        </div>
+                                        <div class="form-group">
                                             <label>Status</label>
                                             <select class="form-control" name="status" id="status"
                                                 value="{{ $data->status }}">

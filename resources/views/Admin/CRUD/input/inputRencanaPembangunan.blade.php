@@ -93,7 +93,7 @@
                                                 <option>Selesai</option>
                                                 <option>Proses Pengerjaan</option>
                                                 <option>Direncanakan</option>
-                                                <option>Di Tolak</option>
+                                                <option>Dibatalkan</option>
                                             </select>
                                         </div>
                                     </div>

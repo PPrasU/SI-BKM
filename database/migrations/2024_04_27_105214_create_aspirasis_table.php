@@ -16,6 +16,7 @@ return new class extends Migration
             $table->string('asal_rw');
             $table->string('kategori');
             $table->string('keterangan');
+            $table->date('tanggal_dilakukan');
             $table->string('status');
             $table->timestamps();
         });

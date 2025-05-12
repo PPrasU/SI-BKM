@@ -37,10 +37,16 @@
                                     <h3 class="card-title">Data Penyimpan Dana</h3>
                                 </div>
                                 <div class="card-body">
-                                    <a href="/Admin/Simpan/Input-Data" class="btn btn-app"
-                                        style="left: -10px; top: -10px">
-                                        <i class="fas fa-plus"></i> Tambah Data
-                                    </a>
+                                    @php
+                                        $user = Auth::user()->name;
+                                    @endphp
+
+                                    @if ($user === 'Admin' || $user === 'Ketua BKM')
+                                        <a href="/Admin/Simpan/Input-Data" class="btn btn-app"
+                                            style="left: -10px; top: -10px">
+                                            <i class="fas fa-plus"></i> Tambah Data
+                                        </a>
+                                    @endif
                                     @if (count($data) > 0)
                                         <a href="/Admin/Simpan/Export-Data/{{ $data[0]->id }}" class="btn btn-app"
                                             style="left: -10px; top: -10px">

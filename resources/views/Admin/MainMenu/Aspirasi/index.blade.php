@@ -43,10 +43,16 @@
                                 </div>
                                 <!-- /.card-header -->
                                 <div class="card-body">
-                                    <a href="/Admin/Aspirasi-Rembuk-Warga/Input-Data" class="btn btn-app"
-                                        style="left: -10px; top: -10px">
-                                        <i class="fas fa-plus"></i> Tambah Data
-                                    </a>
+                                    @php
+                                        $user = Auth::user()->name;
+                                    @endphp
+
+                                    @if ($user === 'Admin' || $user === 'Ketua BKM')
+                                        <a href="/Admin/Aspirasi-Rembuk-Warga/Input-Data" class="btn btn-app"
+                                            style="left: -10px; top: -10px">
+                                            <i class="fas fa-plus"></i> Tambah Data
+                                        </a>
+                                    @endif
                                     @if (count($data) > 0)
                                         <a href="/Admin/Aspirasi-Rembuk-Warga/Export-Data/{{ $data[0]->id }}"
                                             class="btn btn-app" style="left: -10px; top: -10px">
@@ -59,8 +65,15 @@
                                                 <th class="text-center align-middle" style="width: 10px">Aspirasi Dari RW</th>
                                                 <th class="text-center align-middle">Kategori</th>
                                                 <th class="text-center align-middle">Keterangan</th>
+                                                <th class="text-center align-middle">Tanggal</th>
                                                 <th class="text-center align-middle" style="width: 70px">Status</th>
-                                                <th class="text-center align-middle" style="width: 120px">Aksi</th>
+                                                @php
+                                                    $user = Auth::user()->name;
+                                                @endphp
+
+                                                @if ($user === 'Admin' || $user === 'Ketua BKM')
+                                                    <th class="text-center align-middle" style="width: 120px">Aksi</th>
+                                                @endif
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -69,22 +82,31 @@
                                                     <td>{{ $row->asal_rw }}</td>
                                                     <td>{{ $row->kategori }}</td>
                                                     <td>{{ $row->keterangan }}</td>
+                                                    <td>{{ \Carbon\Carbon::parse($row->tanggal_dilakukan)->translatedFormat('d F Y') }}</td>
                                                     <td class="text-center align-middle">
-                                                        <span class="badge {{ 
-                                                            $row->status == 'Selesai' ? 'bg-success' : 
-                                                            ($row->status == 'Dibatalkan' ? 'bg-danger' : 'bg-warning') 
+                                                        <span class="badge {{
+                                                            $row->status == 'Selesai' ? 'bg-success' :
+                                                            ($row->status == 'Dibatalkan' ? 'bg-danger' :
+                                                            ($row->status == 'Direncanakan' ? 'bg-info' : 'bg-warning'))
                                                         }}">
                                                             {{ $row->status }}
                                                         </span>
-                                                    </td>                                                                                                      
-                                                    <td style="text-align: center">
-                                                        <a href="/Admin/Aspirasi-Rembuk-Warga/Edit-Data/{{ $row->id }}"
-                                                            class="btn btn-warning">Edit</a>
-                                                        <a href="#" class="btn btn-danger delete"
-                                                            data-id="{{ $row->id }}"
-                                                            data-asal_rw="{{ $row->asal_rw }}"
-                                                            data-kategori="{{ $row->kategori }}">Hapus</a>
-                                                    </td>
+                                                    </td>                                                                                                     
+                                                    @php
+                                                        $user = Auth::user()->name;
+                                                    @endphp
+
+                                                    @if ($user === 'Admin' || $user === 'Ketua BKM')
+                                                        <td style="text-align: center">
+                                                            <a href="/Admin/Abdimas-Fisik-NonFisik/Edit-Data/{{ $row->id }}"
+                                                                class="btn btn-warning">Edit</a>
+                                                            <a href="#" class="btn btn-danger delete"
+                                                                data-id="{{ $row->id }}"
+                                                                data-asal_rw="{{ $row->asal_rw }}"
+                                                                data-detail_kegiatan="{{ $row->detail_kegiatan }}">Hapus</a>
+                                                        </td>
+                                                    @endif
+
                                                 </tr>
                                             @endforeach
                                         </tbody>

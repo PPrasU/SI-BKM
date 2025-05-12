@@ -66,7 +66,7 @@
                                     </div>
                                     <div class="card-footer">
                                         <div class="text-right">
-                                            <a href="https://lppm.ub.ac.id/id/" class="btn btn-sm btn-primary">
+                                            <a href="https://lppm.ub.ac.id/id/" class="btn btn-sm btn-primary" target="_blank">
                                                 Selengkapnya
                                             </a>
                                         </div>
@@ -95,7 +95,7 @@
                                     </div>
                                     <div class="card-footer">
                                         <div class="text-right">
-                                            <a href="https://lp2m.um.ac.id/" class="btn btn-sm btn-primary">
+                                            <a href="https://lp2m.um.ac.id/" class="btn btn-sm btn-primary" target="_blank">
                                                 Selengkapnya
                                             </a>
                                         </div>
@@ -130,7 +130,7 @@
                                     </div>
                                     <div class="card-footer">
                                         <div class="text-right">
-                                            <a href="https://lp2m.uin-malang.ac.id/" class="btn btn-sm btn-primary">
+                                            <a href="https://lp2m.uin-malang.ac.id/" class="btn btn-sm btn-primary" target="_blank">
                                                 Selengkapnya
                                             </a>
                                         </div>
@@ -161,7 +161,7 @@
                                     <div class="card-footer">
                                         <div class="text-right">
                                             <a href="https://ppm.polinema.ac.id/main/home"
-                                                class="btn btn-sm btn-primary">
+                                                class="btn btn-sm btn-primary" target="_blank">
                                                 Selengkapnya
                                             </a>
                                         </div>
@@ -196,7 +196,7 @@
                                     <div class="card-footer">
                                         <div class="text-right">
                                             <a href="https://dp2m.umm.ac.id/id/pages/home.html"
-                                                class="btn btn-sm btn-primary">
+                                                class="btn btn-sm btn-primary" target="_blank">
                                                 Selengkapnya
                                             </a>
                                         </div>
@@ -225,7 +225,7 @@
                                     </div>
                                     <div class="card-footer">
                                         <div class="text-right">
-                                            <a href="https://lppm.itn.ac.id/" class="btn btn-sm btn-primary">
+                                            <a href="https://lppm.itn.ac.id/" class="btn btn-sm btn-primary" target="_blank">
                                                 Selengkapnya
                                             </a>
                                         </div>
@@ -248,14 +248,14 @@
                                                     Penelitian dan Pengabdian kepada Masyarakat (Puslitabmas).</p>
                                             </div>
                                             <div class="col-5 text-center">
-                                                <img src="https://utmalang.site/wp-content/uploads/2023/06/Logo-UT-Malang.png"
-                                                    alt="Logo LPPM UT Malang" class="img-circle img-fluid">
+                                                <img src="https://upload.wikimedia.org/wikipedia/id/thumb/c/c3/Logo_Universitas_Terbuka.svg/1275px-Logo_Universitas_Terbuka.svg.png"
+                                                    alt="Logo LPPM UT Malang" class="img img-fluid" style="heigh: 120px; width: 120px">
                                             </div>
                                         </div>
                                     </div>
                                     <div class="card-footer">
                                         <div class="text-right">
-                                            <a href="https://lppm.ut.ac.id/" class="btn btn-sm btn-primary">
+                                            <a href="https://lppm.ut.ac.id/" class="btn btn-sm btn-primary" target="_blank">
                                                 Selengkapnya
                                             </a>
                                         </div>
@@ -290,7 +290,7 @@
                                     </div>
                                     <div class="card-footer">
                                         <div class="text-right">
-                                            <a href="https://lppm.unisma.ac.id/" class="btn btn-sm btn-primary">
+                                            <a href="https://lppm.unisma.ac.id/" class="btn btn-sm btn-primary" target="_blank">
                                                 Selengkapnya
                                             </a>
                                         </div>
@@ -319,7 +319,7 @@
                                     </div>
                                     <div class="card-footer">
                                         <div class="text-right">
-                                            <a href="https://lppm.unmer.ac.id/" class="btn btn-sm btn-primary">
+                                            <a href="https://lppm.unmer.ac.id/" class="btn btn-sm btn-primary" target="_blank">
                                                 Selengkapnya
                                             </a>
                                         </div>
@@ -357,7 +357,7 @@
                                     <div class="card-footer">
                                         <div class="text-right">
                                             <a href="https://dppm.unikama.ac.id/id/home/"
-                                                class="btn btn-sm btn-primary">
+                                                class="btn btn-sm btn-primary" target="_blank">
                                                 Selengkapnya
                                             </a>
                                         </div>
@@ -390,7 +390,7 @@
                                     </div>
                                     <div class="card-footer">
                                         <div class="text-right">
-                                            <a href="https://lp2m.asia.ac.id/" class="btn btn-sm btn-primary">
+                                            <a href="https://lp2m.asia.ac.id/" class="btn btn-sm btn-primary" target="_blank">
                                                 Selengkapnya
                                             </a>
                                         </div>
@@ -426,7 +426,7 @@
                                     </div>
                                     <div class="card-footer">
                                         <div class="text-right">
-                                            <a href="#" class="btn btn-sm btn-primary">
+                                            <a href="#" class="btn btn-sm btn-primary" target="_blank">
                                                 Selengkapnya
                                             </a>
                                         </div>

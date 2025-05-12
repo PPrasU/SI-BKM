@@ -42,10 +42,16 @@
                                 </div>
                                 <!-- /.card-header -->
                                 <div class="card-body">
-                                    <a href="/Admin/Pembangunan/Pokir/Input-Data" class="btn btn-app"
-                                        style="left: -10px; top: -10px">
-                                        <i class="fas fa-plus"></i> Tambah Data
-                                    </a>
+                                    @php
+                                        $user = Auth::user()->name;
+                                    @endphp
+
+                                    @if ($user === 'Admin' || $user === 'Ketua BKM')
+                                        <a href="/Admin/Pembangunan/Pokir/Input-Data" class="btn btn-app"
+                                            style="left: -10px; top: -10px">
+                                            <i class="fas fa-plus"></i> Tambah Data
+                                        </a>
+                                    @endif
                                     @if (count($data) > 0)
                                         <a href="/Admin/Pokir/Export-Data/{{ $data[0]->id }}"
                                             class="btn btn-app" style="left: -10px; top: -10px">
@@ -55,12 +61,17 @@
                                     <table id="table4" class="table table-bordered table-striped">
                                         <thead>
                                             <tr>
-                                                <th>Rencana Pembangunan Pada</th>
-                                                <th>Detail Pembangunan</th>
-                                                <th>Tanggal Dimulai Pembangunan</th>
-                                                <th>Tanggal Selesai Pembangunan</th>
-                                                <th>Status</th>
-                                                <th>Aksi</th>
+                                                <th class="text-center align-middle">Lokasi</th>
+                                                <th class="text-center align-middle">Detail Pembangunan</th>
+                                                <th class="text-center align-middle" style="width: 200px">Jangka Waktu</th>
+                                                <th class="text-center align-middle" style="width: 70px">Status</th>
+                                                @php
+                                                    $user = Auth::user()->name;
+                                                @endphp
+
+                                                @if ($user === 'Admin' || $user === 'Ketua BKM')
+                                                    <th class="text-center align-middle" style="width: 120px">Aksi</th>
+                                                @endif
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -68,17 +79,41 @@
                                                 <tr>
                                                     <td>{{ $row->rw_rencana_pemb }}</td>
                                                     <td>{{ $row->detail_pemb }}</td>
-                                                    <td>{{ $row->tanggal_dimulai }}</td>
-                                                    <td>{{ $row->tanggal_selesai }}</td>
-                                                    <td>{{ $row->status }}</td>
-                                                    <td style="text-align: center">
-                                                        <a href="/Admin/Pembangunan/Pokir/Edit-Data/{{ $row->id }}"
-                                                            class="btn btn-warning">Edit</a>
-                                                        <a href="#" class="btn btn-danger delete"
-                                                            data-id="{{ $row->id }}"
-                                                            data-rw_rencana_pemb="{{ $row->rw_rencana_pemb }}"
-                                                            data-detail_pemb="{{ $row->detail_pemb }}">Hapus</a>
+                                                    <td>
+                                                        @php
+                                                            $mulai = \Carbon\Carbon::parse($row->tanggal_dimulai);
+                                                            $selesai = \Carbon\Carbon::parse($row->tanggal_selesai);
+                                                            $totalHari = $mulai->diffInDays($selesai) + 1; // +1 jika ingin inklusif (termasuk hari mulai & selesai)
+                                                        @endphp
+
+                                                        {{ $mulai->translatedFormat('d F Y') }} s/d {{ $selesai->translatedFormat('d F Y') }}
+                                                        <br>
+                                                        Total: {{ $totalHari }} hari
                                                     </td>
+                                                    <td class="text-center align-middle">
+                                                        <span class="badge {{
+                                                            $row->status == 'Selesai' ? 'bg-success' :
+                                                            ($row->status == 'Dibatalkan' ? 'bg-danger' :
+                                                            ($row->status == 'Direncanakan' ? 'bg-info' : 'bg-warning'))
+                                                        }}">
+                                                            {{ $row->status }}
+                                                        </span>
+                                                    </td>
+                                                    @php
+                                                        $user = Auth::user()->name;
+                                                    @endphp
+
+                                                    @if ($user === 'Admin' || $user === 'Ketua BKM')
+                                                        <td style="text-align: center">
+                                                            <a href="/Admin/Abdimas-Fisik-NonFisik/Edit-Data/{{ $row->id }}"
+                                                                class="btn btn-warning">Edit</a>
+                                                            <a href="#" class="btn btn-danger delete"
+                                                                data-id="{{ $row->id }}"
+                                                                data-asal_rw="{{ $row->asal_rw }}"
+                                                                data-detail_kegiatan="{{ $row->detail_kegiatan }}">Hapus</a>
+                                                        </td>
+                                                    @endif
+
                                                 </tr>
                                             @endforeach
                                         </tbody>

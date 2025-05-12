@@ -36,10 +36,17 @@
                                     <h3 class="card-title">Data Peminjam Dana</h3>
                                 </div>
                                 <div class="card-body">
-                                    <a href="/Admin/Pinjam/Input-Data" class="btn btn-app"
-                                        style="left: -10px; top: -10px">
-                                        <i class="fas fa-plus"></i> Tambah Data
-                                    </a>
+                                    @php
+                                        $user = Auth::user()->name;
+                                    @endphp
+
+                                    @if ($user === 'Admin' || $user === 'Ketua BKM')
+                                        <a href="/Admin/Pinjam/Input-Data" class="btn btn-app"
+                                            style="left: -10px; top: -10px">
+                                            <i class="fas fa-plus"></i> Tambah Data
+                                        </a>
+                                    @endif
+                                    
                                     @if (count($data) > 0)
                                         <a href="/Admin/Pinjam/Export-Data/{{ $data[0]->id }}"
                                             class="btn btn-app" style="left: -10px; top: -10px">
@@ -64,7 +71,13 @@
                                                 <th>Tanggal Pinjam</th>
                                                 <th>Tenggat Bayar Terakhir</th>
                                                 <th>Status</th>
-                                                <th>Aksi</th>
+                                                @php
+                                                    $user = Auth::user()->name;
+                                                @endphp
+
+                                                @if ($user === 'Admin' || $user === 'Ketua BKM')
+                                                    <th class="text-center align-middle" style="width: 120px">Aksi</th>
+                                                @endif
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -78,20 +91,29 @@
                                                     <td>{{ $row->tanggal_pinjam }}</td>
                                                     <td>{{ $row->tenggat }}</td>
                                                     <td class="text-center align-middle">
-                                                        <span class="badge {{ 
-                                                            $row->status == 'Lunas' ? 'bg-success' : 
-                                                            ($row->status == 'Belum Lunas' ? 'bg-danger' : 'bg-warning') 
+                                                        <span class="badge {{
+                                                            $row->status == 'Lunas' ? 'bg-success' :
+                                                            ($row->status == 'Belum Lunas' ? 'bg-danger' :
+                                                            ($row->status == 'Lunas + Telat Bayar' ? 'bg-info' : 'bg-warning'))
                                                         }}">
                                                             {{ $row->status }}
                                                         </span>
-                                                    </td>  
-                                                    <td style="text-align: center">
-                                                        <a href="/Admin/Pinjam/Edit-Data/{{ $row->id }}"
-                                                            class="btn btn-warning">Edit</a>
-                                                        <a href="#" class="btn btn-danger delete"
-                                                            data-id="{{ $row->id }}"
-                                                            data-nama_peminjam="{{ $row->nama_peminjam }}">Hapus</a>
                                                     </td>
+                                                    @php
+                                                        $user = Auth::user()->name;
+                                                    @endphp
+
+                                                    @if ($user === 'Admin' || $user === 'Ketua BKM')
+                                                        <td style="text-align: center">
+                                                            <a href="/Admin/Abdimas-Fisik-NonFisik/Edit-Data/{{ $row->id }}"
+                                                                class="btn btn-warning">Edit</a>
+                                                            <a href="#" class="btn btn-danger delete"
+                                                                data-id="{{ $row->id }}"
+                                                                data-asal_rw="{{ $row->asal_rw }}"
+                                                                data-detail_kegiatan="{{ $row->detail_kegiatan }}">Hapus</a>
+                                                        </td>
+                                                    @endif
+
                                                 </tr>
                                             @endforeach
                                         </tbody>
