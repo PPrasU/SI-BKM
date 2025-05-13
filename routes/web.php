@@ -261,7 +261,7 @@ Route::get('/Admin/Penguatan-UMKM/Export-Data/{id}', [PenguatanUMKMController::c
 
 Route::get('/Admin/Abdimas-LPPM/Export-Data/{id}', [AbdimasLPPMController::class, 'exportAbdimasLPPM'])->name('exportAbdimasLPPM');
 
-Route::get('/Admin/Wisata/Ecport-Data/{id}', [WisataController::class, 'exportWisata'])->name('exportWisata');
+Route::get('/Admin/Wisata/Export-Data/{id}', [WisataController::class, 'exportWisata'])->name('exportWisata');
 
 //======== User =======================
 

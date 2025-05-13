@@ -63,14 +63,13 @@
                                     <table id="table1" class="table table-bordered table-striped">
                                         <thead>
                                             <tr>
-                                                <th>Nama Peminjam</th>
-                                                <th>Asal RT/RW</th>
-                                                <th>Pinjam</th>
-                                                <th>Dibayar</th>
-                                                <th>Sisa</th>
-                                                <th>Tanggal Pinjam</th>
-                                                <th>Tenggat Bayar Terakhir</th>
-                                                <th>Status</th>
+                                                <th class="text-center align-middle">Nama Peminjam</th>
+                                                <th class="text-center align-middle">Asal RT/RW</th>
+                                                <th class="text-center align-middle">Pinjam</th>
+                                                <th class="text-center align-middle">Dibayar</th>
+                                                <th class="text-center align-middle">Sisa</th>
+                                                <th class="text-center align-middle" style="width: 200px">Jangka Waktu</th>
+                                                <th class="text-center align-middle" style="width: 70px">Status</th>
                                                 @php
                                                     $user = Auth::user()->name;
                                                 @endphp
@@ -88,8 +87,17 @@
                                                     <td>{{ $row->pinjam }}</td>
                                                     <td>{{ $row->dibayar }}</td>
                                                     <td>{{ $row->sisa }}</td>
-                                                    <td>{{ $row->tanggal_pinjam }}</td>
-                                                    <td>{{ $row->tenggat }}</td>
+                                                    <td>
+                                                        @php
+                                                            $mulai = \Carbon\Carbon::parse($row->tanggal_pinjam);
+                                                            $selesai = \Carbon\Carbon::parse($row->tenggat);
+                                                            $totalHari = $mulai->diffInDays($selesai) + 1; // +1 jika ingin inklusif (termasuk hari mulai & selesai)
+                                                        @endphp
+
+                                                        {{ $mulai->translatedFormat('d F Y') }} s/d {{ $selesai->translatedFormat('d F Y') }}
+                                                        <br>
+                                                        Total: {{ $totalHari }} hari
+                                                    </td>
                                                     <td class="text-center align-middle">
                                                         <span class="badge {{
                                                             $row->status == 'Lunas' ? 'bg-success' :
@@ -105,7 +113,7 @@
 
                                                     @if ($user === 'Admin' || $user === 'Ketua BKM')
                                                         <td style="text-align: center">
-                                                            <a href="/Admin/Abdimas-Fisik-NonFisik/Edit-Data/{{ $row->id }}"
+                                                            <a href="/Admin/Pinjam/Edit-Data/{{ $row->id }}"
                                                                 class="btn btn-warning">Edit</a>
                                                             <a href="#" class="btn btn-danger delete"
                                                                 data-id="{{ $row->id }}"

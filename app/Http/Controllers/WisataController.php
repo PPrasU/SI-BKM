@@ -14,7 +14,6 @@ class WisataController extends Controller
     public function Wisata(){
         $data = Wisata::all();
         return view('Admin/MainMenu/WisataStudiBanding/index', compact('data')); 
-        // return view('Admin/MainMenu/WisataStudiBanding/index'); 
     }
 
     public function inputWisata(){

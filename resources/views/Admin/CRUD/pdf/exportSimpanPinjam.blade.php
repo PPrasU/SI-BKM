@@ -50,12 +50,35 @@
         .status-lunas {
             background-color: #d4edda;
             color: #155724;
+            padding: 6px 12px;
+            border-radius: 4px;
+            display: inline-block;
         }
 
         .status-belum-lunas {
             background-color: #f8d7da;
             color: #721c24;
+            padding: 6px 12px;
+            border-radius: 4px;
+            display: inline-block;
         }
+
+        .status-lunas-telat {
+            background-color: #d1ecf1;
+            color: #0c5460;
+            padding: 6px 12px;
+            border-radius: 4px;
+            display: inline-block;
+        }
+
+        .status-belum-lunas-telat {
+            background-color: #fff3cd;
+            color: #856404;
+            padding: 6px 12px;
+            border-radius: 4px;
+            display: inline-block;
+        }
+
     </style>
 </head>
 
@@ -64,14 +87,13 @@
     <table id="SimpanPinjam">
         <thead>
             <tr>
-                <th>Nama Peminjam</th>
-                <th>Asal RT/RW</th>
-                <th>Pinjam</th>
-                <th>Dibayar</th>
-                <th>Sisa</th>
-                <th>Tanggal Pinjam</th>
-                <th>Tenggat Bayar Terakhir</th>
-                <th>Status</th>
+                <th class="text-center align-middle">Nama Peminjam</th>
+                <th class="text-center align-middle">Asal RT/RW</th>
+                <th class="text-center align-middle">Pinjam</th>
+                <th class="text-center align-middle">Dibayar</th>
+                <th class="text-center align-middle">Sisa</th>
+                <th class="text-center align-middle" style="width: 200px">Jangka Waktu</th>
+                <th class="text-center align-middle" style="width: 70px">Status</th>
             </tr>
         </thead>
         <tbody>
@@ -82,11 +104,25 @@
                     <td>{{ $row->pinjam }}</td>
                     <td>{{ $row->dibayar }}</td>
                     <td>{{ $row->sisa }}</td>
-                    <td>{{ $row->tanggal_pinjam }}</td>
-                    <td>{{ $row->tenggat }}</td>
-                    <td class="{{ $row->status === 'Lunas' ? 'status-lunas' : 'status-belum-lunas' }}">
-                        {{ ucfirst($row->status) }}
+                    <td style="font-size: 14px">
+                        @php
+                            $mulai = \Carbon\Carbon::parse($row->tanggal_pinjam);
+                            $selesai = \Carbon\Carbon::parse($row->tenggat);
+                            $totalHari = $mulai->diffInDays($selesai) + 1; // +1 jika ingin inklusif (termasuk hari mulai & selesai)
+                        @endphp
+
+                        {{ $mulai->translatedFormat('d F Y') }} s/d {{ $selesai->translatedFormat('d F Y') }}
+                        <br>
+                        Total: {{ $totalHari }} hari
                     </td>
+                    <td class="text-center align-middle">
+                        <span class="badge
+                            {{ $row->status == 'Lunas' ? 'status-lunas' : 
+                               ($row->status == 'Belum Lunas' ? 'status-belum-lunas' : 
+                               ($row->status == 'Lunas + Telat Bayar' ? 'status-lunas-telat' : 'status-belum-lunas-telat')) }}">
+                            {{ $row->status }}
+                        </span>
+                    </td>                    
                 </tr>
             @endforeach
         </tbody>

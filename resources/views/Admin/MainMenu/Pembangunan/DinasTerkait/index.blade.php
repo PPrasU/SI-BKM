@@ -105,7 +105,7 @@
 
                                                     @if ($user === 'Admin' || $user === 'Ketua BKM')
                                                         <td style="text-align: center">
-                                                            <a href="/Admin/Abdimas-Fisik-NonFisik/Edit-Data/{{ $row->id }}"
+                                                            <a href="/Admin/Dinas-Terkait/Edit-Data/{{ $row->id }}"
                                                                 class="btn btn-warning">Edit</a>
                                                             <a href="#" class="btn btn-danger delete"
                                                                 data-id="{{ $row->id }}"

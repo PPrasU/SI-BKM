@@ -43,15 +43,31 @@
                                 </div>
                                 <!-- /.card-header -->
                                 <div class="card-body">
+                                    @php
+                                        $user = Auth::user()->name;
+                                    @endphp
+
+                                    @if ($user === 'Admin' || $user === 'Ketua BKM')
+                                        <a href="/Admin/Wisata/Input-Data" class="btn btn-app"
+                                            style="left: -10px; top: -10px">
+                                            <i class="fas fa-plus"></i> Tambah Data
+                                        </a>
+                                    @endif
+                                    @if (count($data) > 0)
+                                        <a href="/Admin/Wisata/Export-Data/{{ $data[0]->id }}"
+                                            class="btn btn-app" style="left: -10px; top: -10px">
+                                            <i class="fa fa-file-pdf"></i> Export Data PDF
+                                        </a>
+                                    @endif
                                     <table id="table4" class="table table-bordered table-striped">
                                         <thead>
                                             <tr>
-                                                <th>RW</th>
-                                                <th>Kategori</th>
-                                                <th>Keterangan</th>
-                                                <th>Tanggal Dilaksanakan</th>
-                                                <th>Status</th>
-                                                <th>Aksi</th>
+                                                <th class="text-center align-middle">RW</th>
+                                                <th class="text-center align-middle">Kategori</th>
+                                                <th class="text-center align-middle">Keterangan</th>
+                                                <th class="text-center align-middle">Tanggal Dilaksanakan</th>
+                                                <th class="text-center align-middle" style="width: 70px">Status</th>
+                                                <th class="text-center align-middle" style="width: 120px">Aksi</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -60,15 +76,29 @@
                                                     <td>{{ $row->rw }}</td>
                                                     <td>{{ $row->kategori }}</td>
                                                     <td>{{ $row->keterangan }}</td>
-                                                    <td>{{ $row->tanggal_dilaksanakan }}</td>
-                                                    <td>{{ $row->status }}</td>
-                                                    <td style="text-align: center">
-                                                        <a href="/Admin/Wisata/Edit-Data/{{ $row->id }}"
-                                                            class="btn btn-warning">Edit</a>
-                                                        <a href="#" class="btn btn-danger delete"
-                                                            data-id="{{ $row->id }}" data-rw="{{ $row->rw }}"
-                                                            data-keterangan="{{ $row->keterangan }}">Hapus</a>
+                                                    <td>{{ \Carbon\Carbon::parse($row->tanggal_dilaksanakan)->translatedFormat('d F Y') }}</td>
+                                                    <td class="text-center align-middle">
+                                                        <span class="badge {{
+                                                            $row->status == 'Selesai' ? 'bg-success' :
+                                                            ($row->status == 'Dibatalkan' ? 'bg-danger' :
+                                                            ($row->status == 'Direncanakan' ? 'bg-info' : 'bg-warning'))
+                                                        }}">
+                                                            {{ $row->status }}
+                                                        </span>
                                                     </td>
+                                                    @php
+                                                        $user = Auth::user()->name;
+                                                    @endphp
+
+                                                    @if ($user === 'Admin' || $user === 'Ketua BKM')
+                                                        <td style="text-align: center">
+                                                            <a href="/Admin/Wisata/Edit-Data/{{ $row->id }}"
+                                                                class="btn btn-warning">Edit</a>
+                                                            <a href="#" class="btn btn-danger delete"
+                                                                data-id="{{ $row->id }}" data-rw="{{ $row->rw }}"
+                                                                data-keterangan="{{ $row->keterangan }}">Hapus</a>
+                                                        </td>
+                                                    @endif
                                                 </tr>
                                             @endforeach
                                         </tbody>
