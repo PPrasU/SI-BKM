@@ -65,9 +65,9 @@
                                             <tr>
                                                 <th class="text-center align-middle" >Nama Penyimpan</th>
                                                 <th class="text-center align-middle" >Asal RT/RW</th>
-                                                <th class="text-center align-middle" >Simpan</th>
-                                                <th class="text-center align-middle" >Ditarik</th>
-                                                <th class="text-center align-middle" >Sisa</th>
+                                                <th class="text-center align-middle" >Simpanan</th>
+                                                <th class="text-center align-middle" >Simpan Terbaru</th>
+                                                <th class="text-center align-middle" >Ditarik Terbaru</th>
                                                 <th class="text-center align-middle" style="width: 110px">Terakhir Ditarik</th>
                                                 <th class="text-center align-middle" style="width: 70px">Status</th>
                                                 @php
@@ -84,9 +84,9 @@
                                                 <tr>
                                                     <td>{{ $row->nama_penyimpan }}</td>
                                                     <td>{{ $row->asal_rt_rw_simpanan }}</td>
+                                                    <td>{{ $row->sisa_simpanan }}</td>
                                                     <td>{{ $row->simpan }}</td>
                                                     <td>{{ $row->ditarik }}</td>
-                                                    <td>{{ $row->sisa_simpanan }}</td>
                                                     <td>{{ \Carbon\Carbon::parse($row->tanggal_ditarik)->translatedFormat('d F Y') }}</td>
                                                     <td class="text-center align-middle">
                                                         <span class="badge {{

@@ -34,8 +34,14 @@
                 <div class="container-fluid">
                     <div class="row">
                         <div class="col-md-12">
+                            <!-- Alert jika penarikan tidak valid -->
+                            <div id="alert_ditarik" class="alert alert-danger mt-2 d-none" role="alert">
+                                Tidak bisa menarik simpanan karena sisa simpanan saat ini adalah 0.
+                            </div>
                             <div class="card card-primary">
                                 <div class="card-header" style="height: 1px;">
+                                    
+
                                 </div>
                                 <form action="/Admin/Simpan/Update-Data/{{ $data->id }}" method="POST" enctype="multipart/form-data"
                                     id="formInputDataProduktif">
@@ -67,37 +73,32 @@
                                                 <option>RW 12</option>
                                             </select>
                                         </div>
-                                        <!-- Simpan -->
+                                        <input type="hidden" id="sisa_lama" value="{{ $data->sisa_simpanan }}">
+
                                         <div class="form-group">
-                                            <label for="simpan_display">Jumlah Simpanan Awal</label>
+                                            <label for="ditarik_display">Jumlah Simpanan Baru</label>
                                             <div class="input-group mb-3">
                                                 <div class="input-group-prepend"><span class="input-group-text">Rp.</span></div>
                                                 <input type="text" id="simpan_display" class="form-control"
-                                                    value="{{ number_format($data->simpan, 0, ',', '.') }}"
-                                                    placeholder="masukkan jumlah simpan....">
-                                                <input type="hidden" name="simpan" id="simpan" value="{{ $data->simpan }}">
+                                                    placeholder="masukkan jumlah simpan..." value="0">
+                                                <input type="hidden" name="simpan" id="simpan" value="0">
                                             </div>
                                         </div>
 
-                                        <!-- Ditarik -->
                                         <div class="form-group">
-                                            <label for="ditarik_display">Jumlah Ditarik Terakhir</label>
+                                            <label for="sisa_display">Jumlah Penarikan Baru</label>
                                             <div class="input-group mb-3">
                                                 <div class="input-group-prepend"><span class="input-group-text">Rp.</span></div>
                                                 <input type="text" id="ditarik_display" class="form-control"
-                                                    value="{{ number_format($data->ditarik, 0, ',', '.') }}"
-                                                    placeholder="masukkan jumlah ditarik....">
-                                                <input type="hidden" name="ditarik" id="ditarik" value="{{ $data->ditarik }}">
+                                                    placeholder="masukkan jumlah ditarik..." value="0">
+                                                <input type="hidden" name="ditarik" id="ditarik" value="0">
                                             </div>
                                         </div>
-
-                                        <!-- Sisa -->
                                         <div class="form-group">
-                                            <label for="sisa_display">Sisa Simpanan</label>
+                                            <label for="sisa_display">Sisa Simpanan Terbaru</label>
                                             <div class="input-group mb-3">
                                                 <div class="input-group-prepend"><span class="input-group-text">Rp.</span></div>
-                                                <input type="text" id="sisa_display" class="form-control"
-                                                    value="{{ number_format($data->sisa_simpanan, 0, ',', '.') }}" readonly>
+                                                <input type="text" id="sisa_display" class="form-control" value="{{ number_format($data->sisa_simpanan, 0, ',', '.') }}" readonly>
                                                 <input type="hidden" name="sisa_simpanan" id="sisa_simpanan" value="{{ $data->sisa_simpanan }}">
                                             </div>
                                         </div>
@@ -117,8 +118,7 @@
                                         <!-- Status -->
                                         <div class="form-group">
                                             <label>Status</label>
-                                            <input type="text" name="status_simpanan" class="form-control"
-                                                id="Inputstatus_simpanan" value="{{ $data->status_simpanan }}" readonly>
+                                            <input type="text" name="status_simpanan" class="form-control" id="Inputstatus_simpanan" value="{{ $data->status_simpanan }}" readonly>
                                         </div>
 
                                     </div>
@@ -189,51 +189,68 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', function () {
-            const MAX = 4000000;
-        
+            const sisaLama = parseInt(document.getElementById('sisa_lama').value) || 0;
+
             const simpanDisplay = document.getElementById('simpan_display');
             const simpanHidden = document.getElementById('simpan');
-        
+
             const ditarikDisplay = document.getElementById('ditarik_display');
             const ditarikHidden = document.getElementById('ditarik');
-        
+
             const sisaDisplay = document.getElementById('sisa_display');
             const sisaHidden = document.getElementById('sisa_simpanan');
-        
+
             const statusInput = document.getElementById('Inputstatus_simpanan');
-        
+
+            const alertDitarik = document.getElementById('alert_ditarik');
+
             function formatWithDots(number) {
-                return number.toLocaleString('id-ID'); // titik sebagai pemisah ribuan
+                return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
             }
-        
-            function parseNumber(str) {
+
+            function parseToNumber(str) {
                 return parseInt(str.replace(/\./g, '')) || 0;
             }
-        
-            function updateAll() {
-                let simpan = parseNumber(simpanDisplay.value);
-                let ditarik = parseNumber(ditarikDisplay.value);
-        
-                // update hidden inputs
-                simpanHidden.value = simpan;
-                ditarikHidden.value = ditarik;
-        
-                // format ulang tampilan
-                simpanDisplay.value = formatWithDots(simpan);
-                ditarikDisplay.value = formatWithDots(ditarik);
-        
-                const sisa = Math.max(simpan - ditarik, 0);
-                sisaDisplay.value = formatWithDots(sisa);
-                sisaHidden.value = sisa;
-        
-                statusInput.value = sisa > 0 ? "Masih Ada Simpanan" : "Tidak Ada Simpanan (Sudah Ditarik Semuanya)";
+
+            function updateFields() {
+                let simpanBaru = parseToNumber(simpanDisplay.value);
+                let ditarikBaru = parseToNumber(ditarikDisplay.value);
+
+                // Jika sisa simpanan lama = 0 dan user mencoba tarik
+                if (sisaLama === 0 && ditarikBaru > 0) {
+                    alertDitarik.classList.remove('d-none');
+                    ditarikDisplay.value = "0";
+                    ditarikHidden.value = 0;
+                    return;
+                } else {
+                    alertDitarik.classList.add('d-none');
+                }
+
+                // Hitung total simpanan dan sisa
+                const totalSimpan = simpanBaru;
+                const totalDitarik = ditarikBaru;
+
+                const sisaTerbaru = Math.max(sisaLama + simpanBaru - ditarikBaru, 0);
+
+                // Set nilai ke input hidden
+                simpanHidden.value = totalSimpan;
+                ditarikHidden.value = totalDitarik;
+                sisaHidden.value = sisaTerbaru;
+
+                // Format tampilan
+                simpanDisplay.value = formatWithDots(totalSimpan);
+                ditarikDisplay.value = formatWithDots(totalDitarik);
+                sisaDisplay.value = formatWithDots(sisaTerbaru);
+
+                // Status
+                statusInput.value = sisaTerbaru > 0 ? "Masih Ada Simpanan" : "Tidak Ada Simpanan (Sudah Ditarik Semuanya)";
             }
-        
-            simpanDisplay.addEventListener('input', updateAll);
-            ditarikDisplay.addEventListener('input', updateAll);
+
+            simpanDisplay.addEventListener('input', updateFields);
+            ditarikDisplay.addEventListener('input', updateFields);
         });
     </script>
-    
+
 </body>
 
 </html>
