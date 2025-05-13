@@ -24,7 +24,7 @@
                                 <li class="breadcrumb-item"><a href="/Admin/Pembangunan/Lembaga-Negeri">Lembaga
                                         Negeri</a>
                                 </li>
-                                <li class="breadcrumb-item"><a href="/Admin/Pembangunan/Lembaga-Negeri/Input-Data">Input
+                                <li class="breadcrumb-item"><a href="#">Input
                                         Data</a>
                                 </li>
                             </ol>

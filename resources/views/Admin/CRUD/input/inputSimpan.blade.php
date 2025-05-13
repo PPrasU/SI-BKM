@@ -64,34 +64,33 @@
                                                 <option>RW 12</option>
                                             </select>
                                         </div>
+                                        <!-- Jumlah Simpan -->
                                         <div class="form-group">
-                                            <label for="simpan">Jumlah Simpan</label>
+                                            <label for="simpan_display">Jumlah Simpan</label>
                                             <div class="input-group mb-3">
-                                                <div class="input-group-prepend">
-                                                    <span class="input-group-text">Rp.</span>
-                                                </div>
-                                                <input type="number" name="simpan" class="form-control" id="simpan"
-                                                    placeholder="masukkan jumlah simpan...." max="4000000">
+                                                <div class="input-group-prepend"><span class="input-group-text">Rp.</span></div>
+                                                <input type="text" id="simpan_display" class="form-control" placeholder="masukkan jumlah simpan....">
+                                                <input type="hidden" name="simpan" id="simpan">
                                             </div>
                                         </div>
+
+                                        <!-- Jumlah Ditarik -->
                                         <div class="form-group">
-                                            <label for="ditarik">Jumlah Ditarik</label>
+                                            <label for="ditarik_display">Jumlah Ditarik</label>
                                             <div class="input-group mb-3">
-                                                <div class="input-group-prepend">
-                                                    <span class="input-group-text">Rp.</span>
-                                                </div>
-                                                <input type="number" name="ditarik" class="form-control" id="ditarik"
-                                                    placeholder="masukkan jumlah ditarik...." max="4000000">
+                                                <div class="input-group-prepend"><span class="input-group-text">Rp.</span></div>
+                                                <input type="text" id="ditarik_display" class="form-control" placeholder="masukkan jumlah ditarik....">
+                                                <input type="hidden" name="ditarik" id="ditarik">
                                             </div>
                                         </div>
+
+                                        <!-- Sisa Simpanan (readonly) -->
                                         <div class="form-group">
-                                            <label for="sisa_simpanan">Sisa Simpanan</label>
+                                            <label for="sisa_display">Sisa Simpanan</label>
                                             <div class="input-group mb-3">
-                                                <div class="input-group-prepend">
-                                                    <span class="input-group-text">Rp.</span>
-                                                </div>
-                                                <input type="number" name="sisa_simpanan" class="form-control"
-                                                    id="sisa_simpanan" placeholder="sisa simpanan" max="4000000">
+                                                <div class="input-group-prepend"><span class="input-group-text">Rp.</span></div>
+                                                <input type="text" id="sisa_display" class="form-control" readonly placeholder="sisa simpanan">
+                                                <input type="hidden" name="sisa_simpanan" id="sisa_simpanan">
                                             </div>
                                         </div>
                                         <div class="form-group">
@@ -104,13 +103,10 @@
                                             <input type="date" name="tanggal_ditarik" class="form-control"
                                                 id="tanggal_ditarik" placeholder="dd/mm/yyyy">
                                         </div>
+                                        <!-- Status -->
                                         <div class="form-group">
                                             <label>Status</label>
-                                            <select class="form-control" name="status_simpanan" id="status_simpanan">
-                                                <option selected disabled>-- Pilih Status --</option>
-                                                <option>Masih Ada Simpanan</option>
-                                                <option>Tidak Ada Simpanan (Sudah Ditarik Semua)</option>
-                                            </select>
+                                            <input type="text" name="status_simpanan" class="form-control" id="Inputstatus_simpanan" placeholder="Status" readonly>
                                         </div>
                                     </div>
                                     <div class="card-footer">
@@ -130,19 +126,6 @@
     @include('Layout/script')
     <script>
         $(function() {
-            function calculateSisaSimpanan() {
-                const simpan = parseFloat(document.getElementById('simpan').value) || 0;
-                const ditarik = parseFloat(document.getElementById('ditarik').value) || 0;
-                const sisa = simpan - ditarik;
-                document.getElementById('sisa_pinjaman').value = sisa;
-
-                const statusElement = document.getElementById('status_pinjaman');
-                if (sisa == 0) {
-                    status_simpanan.value = 'Tidak Ada Simpanan (Sudah Ditarik Semua)';
-                } else {
-                    status_simpanan.value = 'Masih Ada Simpanan';
-                }
-            }
             $('#formInputDataProduktif').validate({
                 rules: {
                     nama_penyimpan: {
@@ -190,6 +173,55 @@
             });
         });
     </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const simpanDisplay = document.getElementById('simpan_display');
+            const simpanHidden = document.getElementById('simpan');
+    
+            const ditarikDisplay = document.getElementById('ditarik_display');
+            const ditarikHidden = document.getElementById('ditarik');
+    
+            const sisaDisplay = document.getElementById('sisa_display');
+            const sisaHidden = document.getElementById('sisa_simpanan');
+    
+            const statusInput = document.getElementById('Inputstatus_simpanan');
+    
+            function formatWithDots(number) {
+                return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+            }
+    
+            function parseToNumber(str) {
+                return parseInt(str.replace(/\./g, '')) || 0;
+            }
+    
+            function updateFields() {
+                const simpan = parseToNumber(simpanDisplay.value);
+                const ditarik = parseToNumber(ditarikDisplay.value);
+    
+                // Update nilai ke input hidden
+                simpanHidden.value = simpan;
+                ditarikHidden.value = ditarik;
+    
+                // Format ulang input tampilan
+                simpanDisplay.value = formatWithDots(simpan);
+                ditarikDisplay.value = formatWithDots(ditarik);
+    
+                // Hitung sisa simpanan
+                const sisa = Math.max(simpan - ditarik, 0);
+                sisaDisplay.value = formatWithDots(sisa);
+                sisaHidden.value = sisa;
+    
+                // Status
+                statusInput.value = sisa > 0 ? "Masih Ada Simpanan" : "Tidak Ada Simpanan (Sudah Ditarik Semuanya)";
+            }
+    
+            simpanDisplay.addEventListener('input', updateFields);
+            ditarikDisplay.addEventListener('input', updateFields);
+        });
+    </script>
+    
+    
+    
 </body>
 
 </html>

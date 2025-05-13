@@ -23,7 +23,7 @@
                                 <li class="breadcrumb-item">Program</li>
                                 <li class="breadcrumb-item"><a href="/Admin/Simpan-Pinjam">
                                         Simpan Pinjam Warga</a></li>
-                                <li class="breadcrumb-item"><a href="/Admin/Simpan-Pinjam/Edit-Data">Edit Data</a>
+                                <li class="breadcrumb-item"><a href="#">Edit Data</a>
                                 </li>
                             </ol>
                         </div>

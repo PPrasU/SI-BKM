@@ -24,6 +24,7 @@
                                 <li class="breadcrumb-item"><a href="/Admin/Wisata">
                                         Wisata / Studi Banding</a></li>
                                 </li>
+                                <li class="breadcrumb-item"><a href="#">Edit Data</a>
                             </ol>
                         </div>
                     </div>

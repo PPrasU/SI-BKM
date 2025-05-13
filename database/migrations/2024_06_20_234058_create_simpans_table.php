@@ -19,7 +19,7 @@ return new class extends Migration
             $table->bigInteger('ditarik');
             $table->bigInteger('sisa_simpanan');
             $table->date('tanggal_disimpan');
-            $table->date('tanggal_ditarik');
+            $table->date('tanggal_ditarik')->nullable();
             $table->string('status_simpanan');
             $table->timestamps();
         });

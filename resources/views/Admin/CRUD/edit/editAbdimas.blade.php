@@ -23,7 +23,7 @@
                                 <li class="breadcrumb-item">Program</li>
                                 <li class="breadcrumb-item"><a href="/Admin/Abdimas-Fisik-NonFisik">
                                         Abdimas Fisik & Non Fisik</a></li>
-                                <li class="breadcrumb-item"><a href="/Admin/Abdimas-Fisik-NonFisik/Edit-Data">Edit
+                                <li class="breadcrumb-item"><a href="#">Edit
                                         Data</a>
                                 </li>
                             </ol>

@@ -63,15 +63,20 @@
                                     <table id="table2" class="table table-bordered table-striped">
                                         <thead>
                                             <tr>
-                                                <th>Nama Penyimpan</th>
-                                                <th>Asal RT/RW</th>
-                                                <th>Simpan</th>
-                                                <th>Ditarik</th>
-                                                <th>Sisa</th>
-                                                <th>Tanggal Simpan</th>
-                                                <th>Tanggal Ditarik</th>
-                                                <th>Status</th>
-                                                <th>Aksi</th>
+                                                <th class="text-center align-middle" >Nama Penyimpan</th>
+                                                <th class="text-center align-middle" >Asal RT/RW</th>
+                                                <th class="text-center align-middle" >Simpan</th>
+                                                <th class="text-center align-middle" >Ditarik</th>
+                                                <th class="text-center align-middle" >Sisa</th>
+                                                <th class="text-center align-middle" style="width: 110px">Terakhir Ditarik</th>
+                                                <th class="text-center align-middle" style="width: 70px">Status</th>
+                                                @php
+                                                    $user = Auth::user()->name;
+                                                @endphp
+
+                                                @if ($user === 'Admin' || $user === 'Ketua BKM')
+                                                    <th class="text-center align-middle" style="width: 120px">Aksi</th>
+                                                @endif
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -82,16 +87,44 @@
                                                     <td>{{ $row->simpan }}</td>
                                                     <td>{{ $row->ditarik }}</td>
                                                     <td>{{ $row->sisa_simpanan }}</td>
-                                                    <td>{{ $row->tanggal_disimpan }}</td>
-                                                    <td>{{ $row->tanggal_ditarik }}</td>
-                                                    <td>{{ $row->status_simpanan }}</td>
-                                                    <td style="text-align: center">
-                                                        <a href="/Admin/Simpan/Edit-Data/{{ $row->id }}"
-                                                            class="btn btn-warning">Edit</a>
-                                                        <a href="#" class="btn btn-danger delete"
-                                                            data-id="{{ $row->id }}"
-                                                            data-nama_penyimpan="{{ $row->nama_penyimpan }}">Hapus</a>
+                                                    <td>{{ \Carbon\Carbon::parse($row->tanggal_ditarik)->translatedFormat('d F Y') }}</td>
+                                                    <td class="text-center align-middle">
+                                                        <span class="badge {{
+                                                            $row->status_simpanan == 'Masih Ada Simpanan' ? 'bg-success' :
+                                                            ($row->status_simpanan == 'Tidak Ada Simpanan (Sudah Ditarik Semuanya)' ? 'bg-danger' :
+                                                            ($row->status_simpanan == 'Lunas' ? 'bg-info' : 'bg-warning'))
+                                                        }}">
+                                                            {{ $row->status_simpanan }}
+                                                        </span>
                                                     </td>
+                                                    @php
+                                                        $user = Auth::user()->name;
+                                                    @endphp
+                                                    
+                                                    @if ($user === 'Admin' || $user === 'Ketua BKM')
+                                                        <td style="text-align: center">
+                                                            {{-- Tampilkan tombol Edit hanya jika simpanan masih ada --}}
+                                                            @if ($row->status_simpanan == 'Tidak Ada Simpanan (Sudah Ditarik Semuanya)')
+                                                                {{-- <a href="#" class="btn btn-default disabled">-</a> --}}
+
+                                                                {{-- hapus bawah ini --}}
+                                                                <a href="/Admin/Simpan/Edit-Data/{{ $row->id }}" class="btn btn-warning">Edit</a>
+                                                                <a href="#" class="btn btn-danger delete"
+                                                                    data-id="{{ $row->id }}"
+                                                                    data-nama_penyimpan="{{ $row->nama_penyimpan }}">Hapus
+                                                                </a>
+                                                            @else
+                                                                <a href="/Admin/Simpan/Edit-Data/{{ $row->id }}" class="btn btn-warning">Edit</a>
+                                                                <a href="#" class="btn btn-danger delete"
+                                                                    data-id="{{ $row->id }}"
+                                                                    data-nama_penyimpan="{{ $row->nama_penyimpan }}">Hapus
+                                                                </a>
+                                                                {{-- hapus button atasnya --}}
+                                                            @endif
+                                                            
+                                                            
+                                                        </td>
+                                                    @endif                                                    
                                                 </tr>
                                             @endforeach
                                         </tbody>

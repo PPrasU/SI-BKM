@@ -23,7 +23,7 @@
                                 <li class="breadcrumb-item">Program</li>
                                 <li class="breadcrumb-item"><a href="/Admin/Abdimas-LPPM">
                                         Abdimas LPPM Kampus</a></li>
-                                <li class="breadcrumb-item"><a href="/Admin/Abdimas-LPPM/Edit-Data">Edit
+                                <li class="breadcrumb-item"><a href="#">Edit
                                         Data</a>
                                 </li>
                             </ol>

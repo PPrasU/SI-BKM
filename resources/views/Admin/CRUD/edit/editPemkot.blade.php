@@ -22,7 +22,7 @@
                             <ol class="breadcrumb float-sm-right">
                                 <li class="breadcrumb-item">Program</li>
                                 <li class="breadcrumb-item"><a href="/Admin/Pembangunan/Pemkot">Pemkot</a></li>
-                                <li class="breadcrumb-item"><a href="/Admin/Pembangunan/Pemkot/Edit-Data">Edit
+                                <li class="breadcrumb-item"><a href="#">Edit
                                         Data</a>
                                 </li>
                             </ol>

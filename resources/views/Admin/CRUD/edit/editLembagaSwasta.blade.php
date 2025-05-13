@@ -24,7 +24,7 @@
                                 <li class="breadcrumb-item"><a href="/Admin/Pembangunan/Lembaga-Swasta">Lembaga
                                         Swasta</a>
                                 </li>
-                                <li class="breadcrumb-item"><a href="/Admin/Pembangunan/Lembaga-Swasta/Edit-Data">Edit
+                                <li class="breadcrumb-item"><a href="#">Edit
                                         Data</a>
                                 </li>
                             </ol>

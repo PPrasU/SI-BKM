@@ -23,7 +23,7 @@
                                 <li class="breadcrumb-item">Program</li>
                                 <li class="breadcrumb-item"><a href="/Admin/Pembangunan/Dinas-Terkait">Dinas Terkait</a>
                                 </li>
-                                <li class="breadcrumb-item"><a href="/Admin/Pembangunan/Dinas-Terkait/Edit-Data">Edit
+                                <li class="breadcrumb-item"><a href="#">Edit
                                         Data</a>
                                 </li>
                             </ol>
