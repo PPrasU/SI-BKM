@@ -1,110 +1,110 @@
 <!DOCTYPE html>
-<html>
-
+<html lang="id">
 <head>
+    <meta charset="UTF-8">
+    <title>Export Data</title>
     <style>
         @page {
-            size: A4 landscape;
-            margin: 20mm;
+            size: A4 portrait;
+            margin: 1.27cm;
         }
         body {
-            font-family: Arial, Helvetica, sans-serif;
-            margin: 20px;
+            font-family: Arial, sans-serif;
+            font-size: 12px;
+            position: relative;
         }
-
-        h3 {
+        h2 {
             text-align: center;
+            font-size: 14px;
             margin-bottom: 20px;
-            color: #333;
         }
-
         table {
             width: 100%;
             border-collapse: collapse;
-            margin-bottom: 20px;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            overflow: hidden;
+            margin-bottom: 40px;
         }
-
-        th,
-        td {
-            padding: 12px;
-            text-align: center;
-            border: 1px solid #ddd;
+        th, td {
+            border: 1px solid #000;
+            padding: 6px;
+            font-size: 11px;
+            vertical-align: middle;
         }
-
         th {
-            background-color: #00aaff;
-            color: white;
+            font-size: 12px;
+            text-align: center;
+            background-color: #f2f2f2;
+        }
+        td {
+            text-align: center;
+        }
+        .justify {
+            text-align: justify;
+        }
+        .status-selesai {
+            background-color: #28A745;
+            color: #fff;
+        }
+        .status-direncanakan {
+            background-color: #17A2B8;
+            color: #fff;
+        }
+        .status-dibatalkan {
+            background-color: #DC3545;
+            color: #fff;
+        }
+        .status-lainnya {
+            background-color: #FFC107;
+            color: #000;
+        }
+        .footer {
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            font-size: 10px;
         }
 
-        tr:nth-child(even) {
-            background-color: #f9f9f9;
-        }
-
-        tr:hover {
-            background-color: #f1f1f1;
-        }
-
-        .status-lunas {
-            background-color: #d4edda;
-            color: #155724;
-            padding: 6px 12px;
-            border-radius: 4px;
-            display: inline-block;
-        }
-
-        .status-belum-lunas {
-            background-color: #f8d7da;
-            color: #721c24;
-            padding: 6px 12px;
-            border-radius: 4px;
-            display: inline-block;
-        }
-
-        .status-lunas-telat {
-            background-color: #d1ecf1;
-            color: #0c5460;
-            padding: 6px 12px;
-            border-radius: 4px;
-            display: inline-block;
-        }
-
-        .status-belum-lunas-telat {
-            background-color: #fff3cd;
-            color: #856404;
-            padding: 6px 12px;
-            border-radius: 4px;
-            display: inline-block;
-        }
+        /* .with-watermark {
+            background-image: url('{{ asset('img/image.jpg') }}');
+            background-repeat: no-repeat;
+            background-position: center;
+            background-size: 70%;
+            opacity: 1;
+        } */
 
     </style>
 </head>
+<body class="with-watermark">
 
-<body>
-    <h3>Laporan Data Simpan Pinjam Kelurahan Tanjungrejo</h3>
-    <table id="SimpanPinjam">
+    <h2>Data Abdimas Pemberdayaan Fisik dan Non Fisik</h2>
+
+    <table>
         <thead>
             <tr>
-                <th class="text-center align-middle">Nama Peminjam</th>
-                <th class="text-center align-middle">Asal RT/RW</th>
-                <th class="text-center align-middle">Pinjam</th>
-                <th class="text-center align-middle">Dibayar</th>
-                <th class="text-center align-middle">Sisa</th>
-                <th class="text-center align-middle" style="width: 200px">Jangka Waktu</th>
-                <th class="text-center align-middle" style="width: 70px">Status</th>
+                <th>Nama Peminjam</th>
+                <th>Asal</th>
+                <th>Simpanan</th>
+                <th>Terakhir Ditarik</th>
+                <th>Status</th>
             </tr>
         </thead>
         <tbody>
             @foreach ($data as $row)
+                @php
+                    $statusClass = match($row->status) {
+                        'Lunas' => 'status-selesai',
+                        'Lunas + Telat Bayar' => 'status-direncanakan',
+                        'Belum Lunas' => 'status-dibatalkan',
+                        default => 'status-lainnya'
+                    };
+
+                    // Ambil hanya angka dari RW
+                    $rw = preg_replace('/[^0-9]/', '', $row->asal_rt_rw);
+                @endphp
                 <tr>
                     <td>{{ $row->nama_peminjam }}</td>
-                    <td>{{ $row->asal_rt_rw }}</td>
-                    <td>{{ $row->pinjam }}</td>
-                    <td>{{ $row->dibayar }}</td>
+                    <td>{{ $rw }}</td>
                     <td>{{ $row->sisa }}</td>
-                    <td style="font-size: 14px">
+                    <td>
                         @php
                             $mulai = \Carbon\Carbon::parse($row->tanggal_pinjam);
                             $selesai = \Carbon\Carbon::parse($row->tenggat);
@@ -115,18 +115,15 @@
                         <br>
                         Total: {{ $totalHari }} hari
                     </td>
-                    <td class="text-center align-middle">
-                        <span class="badge
-                            {{ $row->status == 'Lunas' ? 'status-lunas' : 
-                               ($row->status == 'Belum Lunas' ? 'status-belum-lunas' : 
-                               ($row->status == 'Lunas + Telat Bayar' ? 'status-lunas-telat' : 'status-belum-lunas-telat')) }}">
-                            {{ $row->status }}
-                        </span>
-                    </td>                    
+                    <td class="{{ $statusClass }}">{{ $row->status }}</td>
                 </tr>
             @endforeach
         </tbody>
     </table>
-</body>
 
+    <div class="footer">
+        Dicetak pada {{ \Carbon\Carbon::now()->translatedFormat('j F Y') }} - Jam: {{ \Carbon\Carbon::now()->format('H:i:s') }} (SI-BKM Development Team)
+    </div>
+
+</body>
 </html>

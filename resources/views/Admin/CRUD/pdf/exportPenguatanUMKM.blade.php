@@ -1,94 +1,117 @@
 <!DOCTYPE html>
-<html>
-
+<html lang="id">
 <head>
+    <meta charset="UTF-8">
+    <title>Export Data</title>
     <style>
         @page {
-            size: A4 landscape;
-            margin: 20mm;
+            size: A4 portrait;
+            margin: 1.27cm;
         }
         body {
-            font-family: Arial, Helvetica, sans-serif;
-            margin: 20px;
+            font-family: Arial, sans-serif;
+            font-size: 12px;
+            position: relative;
         }
-
-        h3 {
+        h2 {
             text-align: center;
+            font-size: 14px;
             margin-bottom: 20px;
-            color: #333;
         }
-
         table {
             width: 100%;
             border-collapse: collapse;
-            margin-bottom: 20px;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            overflow: hidden;
+            margin-bottom: 40px;
         }
-
-        th,
-        td {
-            padding: 12px;
-            text-align: center;
-            border: 1px solid #ddd;
+        th, td {
+            border: 1px solid #000;
+            padding: 6px;
+            font-size: 11px;
+            vertical-align: middle;
         }
-
         th {
-            background-color: #00aaff;
-            color: white;
+            font-size: 12px;
+            text-align: center;
+            background-color: #f2f2f2;
         }
-
-        tr:nth-child(even) {
-            background-color: #f9f9f9;
+        td {
+            text-align: center;
         }
-
-        tr:hover {
-            background-color: #f1f1f1;
+        .justify {
+            text-align: justify;
         }
-
         .status-selesai {
-            background-color: #d4edda;
-            color: #155724;
+            background-color: #28A745;
+            color: #fff;
         }
-
         .status-direncanakan {
-            background-color: #fff3cd;
-            color: #856404;
+            background-color: #17A2B8;
+            color: #fff;
+        }
+        .status-dibatalkan {
+            background-color: #DC3545;
+            color: #fff;
+        }
+        .status-lainnya {
+            background-color: #FFC107;
+            color: #000;
+        }
+        .footer {
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            font-size: 10px;
         }
 
-        .status-belum-dilakukan {
-            background-color: #f8d7da;
-            color: #721c24;
-        }
+        /* .with-watermark {
+            background-image: url('{{ asset('img/image.jpg') }}');
+            background-repeat: no-repeat;
+            background-position: center;
+            background-size: 70%;
+            opacity: 1;
+        } */
+
     </style>
 </head>
+<body class="with-watermark">
 
-<body>
-    <h3>Laporan Data Penguatan UMKM Di Kelurahan Tanjungrejo</h3>
-    <table id="SimpanPinjam">
+    <h2>Data Penguatan UMKM</h2>
+
+    <table>
         <thead>
             <tr>
                 <th>RW</th>
-                <th>Detail Kegiatan Penguatan UMKM</th>
-                <th>Tanggal Dilakukan Penguatan UMKM</th>
+                <th>Detail Kegiatan</th>
+                <th>Tanggal Pelaksanaan</th>
                 <th>Status</th>
             </tr>
         </thead>
         <tbody>
             @foreach ($data as $row)
+                @php
+                    $statusClass = match($row->status) {
+                        'Selesai' => 'status-selesai',
+                        'Direncanakan' => 'status-direncanakan',
+                        'Dibatalkan' => 'status-dibatalkan',
+                        default => 'status-lainnya'
+                    };
+
+                    // Ambil hanya angka dari RW
+                    $rw = preg_replace('/[^0-9]/', '', $row->rw);
+                @endphp
                 <tr>
-                    <td>{{ $row->rw }}</td>
-                    <td>{{ $row->detail_penguatan_umkm }}</td>
-                    <td>{{ $row->tanggal_dilaksanakan }}</td>
-                    <td
-                        class="{{ $row->status === 'Sudah Dilakukan' ? 'status-selesai' : ($row->status === 'Direncanakan' ? 'status-direncanakan' : 'status-belum-dilakukan') }}">
-                        {{ ucfirst($row->status) }}
-                    </td>
+                    <td>{{ $rw }}</td>
+                    <td class="justify">{{ $row->detail_penguatan_umkm }}</td>
+                    <td>{{ \Carbon\Carbon::parse($row->tanggal_dilaksanakan)->translatedFormat('d F Y') }}</td>
+                    <td class="{{ $statusClass }}">{{ $row->status }}</td>
                 </tr>
             @endforeach
         </tbody>
     </table>
-</body>
 
+    <div class="footer">
+        Dicetak pada {{ \Carbon\Carbon::now()->translatedFormat('j F Y') }} - Jam: {{ \Carbon\Carbon::now()->format('H:i:s') }} (SI-BKM Development Team)
+    </div>
+
+</body>
 </html>

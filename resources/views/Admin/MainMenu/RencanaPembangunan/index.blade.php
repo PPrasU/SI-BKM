@@ -62,7 +62,7 @@
                                         <thead>
                                             <tr>
                                                 <th class="text-center align-middle">Lokasi</th>
-                                                <th class="text-center align-middle">Rencana Pembangunan Dengan</th>
+                                                <th class="text-center align-middle">Dengan</th>
                                                 <th class="text-center align-middle">Detail Pembangunan</th>
                                                 <th class="text-center align-middle" style="width: 200px">Jangka Waktu</th>
                                                 <th class="text-center align-middle" style="width: 70px">Status</th>

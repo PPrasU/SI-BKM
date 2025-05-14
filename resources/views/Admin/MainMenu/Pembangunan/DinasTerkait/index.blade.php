@@ -47,7 +47,7 @@
                                     @endphp
 
                                     @if ($user === 'Admin' || $user === 'Ketua BKM')
-                                        <a href="/Admin/Pembangunan/Dinas/-Terkait/Input-Data" class="btn btn-app"
+                                        <a href="/Admin/Pembangunan/Dinas-Terkait/Input-Data" class="btn btn-app"
                                             style="left: -10px; top: -10px">
                                             <i class="fas fa-plus"></i> Tambah Data
                                         </a>
@@ -105,7 +105,7 @@
 
                                                     @if ($user === 'Admin' || $user === 'Ketua BKM')
                                                         <td style="text-align: center">
-                                                            <a href="/Admin/Dinas-Terkait/Edit-Data/{{ $row->id }}"
+                                                            <a href="/Admin/Pembangunan/Dinas-Terkait/Edit-Data/{{ $row->id }}"
                                                                 class="btn btn-warning">Edit</a>
                                                             <a href="#" class="btn btn-danger delete"
                                                                 data-id="{{ $row->id }}"
